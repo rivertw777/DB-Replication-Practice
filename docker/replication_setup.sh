@@ -1,10 +1,11 @@
 # 1. Docker Compose 시작
 echo "Docker Compose를 시작합니다..."
+cd docker
 docker-compose up -d
 
 # 2. Master가 준비될 때까지 대기
 echo "Master 서버가 준비될 때까지 대기 중..."
-sleep 10
+sleep 20
 
 # 2. Master 상태 확인 및 로그 파일과 위치 추출
 echo "Master 상태를 확인합니다..."

@@ -2,5 +2,5 @@
 server-id = 1
 log-bin = mysql-bin
 binlog-format = ROW
-binlog-do-db = db
+binlog-do-db = test
 bind-address = 0.0.0.0
