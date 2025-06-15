@@ -5,33 +5,19 @@ spring:
       username: user
       password: 1234
       driver-class-name: com.mysql.cj.jdbc.Driver
-      hikari:
-        maximum-pool-size: 10
-        minimum-idle: 5
-        idle-timeout: 300000
-        connection-timeout: 30000
-
-    slave1:
-      jdbc-url: jdbc:mysql://localhost:3308/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-      username: user
-      password: 1234
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      hikari:
-        maximum-pool-size: 10
-        minimum-idle: 5
-        idle-timeout: 300000
-        connection-timeout: 30000
-
-    slave2:
-      jdbc-url: jdbc:mysql://localhost:3309/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-      username: user
-      password: 1234
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      hikari:
-        maximum-pool-size: 10
-        minimum-idle: 5
-        idle-timeout: 300000
-        connection-timeout: 30000
+    slaves:
+      slave1:
+        name: slave-1
+        jdbc-url: jdbc:mysql://localhost:3308/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+        username: user
+        password: 1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      slave2:
+        name: slave-2
+        jdbc-url: jdbc:mysql://localhost:3309/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+        username: user
+        password: 1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:

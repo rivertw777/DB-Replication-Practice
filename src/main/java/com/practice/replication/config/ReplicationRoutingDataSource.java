@@ -4,24 +4,36 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class ReplicationRoutingDataSource extends AbstractRoutingDataSource {
 
-    private static final List<String> SLAVE_KEYS = List.of("slave1", "slave2");
+    private CircularList<String> slaveDataSourceNameList;
+
+    @Override
+    public void setTargetDataSources(Map<Object, Object> targetDataSources) {
+        super.setTargetDataSources(targetDataSources);
+
+        slaveDataSourceNameList = new CircularList<>(
+                targetDataSources.keySet()
+                        .stream()
+                        .map(Object::toString)
+                        .filter(string -> string.contains("slave"))
+                        .collect(Collectors.toList())
+        );
+    }
 
     @Override
     protected Object determineCurrentLookupKey() {
         String dataSourceKey;
 
+        // 읽기 전용 트랜잭션인 경우 슬레이브 DB로 라우팅
         if (TransactionSynchronizationManager.isCurrentTransactionReadOnly()) {
-            // 읽기 전용 트랜잭션인 경우 슬레이브 DB로 라우팅 (랜덤 선택)
-            dataSourceKey = SLAVE_KEYS.get(ThreadLocalRandom.current().nextInt(SLAVE_KEYS.size()));
+            dataSourceKey = slaveDataSourceNameList.getOne();
             log.info("[READ] Routing to: {}", dataSourceKey);
         } else {
-            // 쓰기 트랜잭션인 경우 마스터 DB로 라우팅
             dataSourceKey = "master";
             log.info("[WRITE] Routing to: {}", dataSourceKey);
         }
